@@ -40,7 +40,6 @@ public class BeneficiaryControllerTest {
         String url = "/beneficiaries/list";
 
         // When
-
         Mockito.when(beneficiaryService.findAll()).thenReturn(beneficiaryList);
 
         // Then
@@ -48,7 +47,6 @@ public class BeneficiaryControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("beneficiaries",
                         beneficiaryList));
-
     }
 
     @Test
@@ -60,14 +58,14 @@ public class BeneficiaryControllerTest {
         mockMvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("beneficiary"));
-
     }
 
     @Test
     void showQRCode() throws Exception {
         // Given
-        String url = "/beneficiaries/showQRCode";
         Beneficiary beneficiary = new Beneficiary("TEST_UNIQUE_CODE", "TEST_NAME");
+
+        String url = "/beneficiaries/showQRCode";
         String qrCodeLink = new QRCodeLink().generateQRCodeLink(beneficiary);
 
         // When
@@ -77,7 +75,6 @@ public class BeneficiaryControllerTest {
         mockMvc.perform(get(url).param("beneficiaryId", "0"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("qrCodeLink", qrCodeLink));
-
     }
 
     @Test
@@ -95,27 +92,4 @@ public class BeneficiaryControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("beneficiary", beneficiary));
     }
-    /*
-    // OPTIONAL: PERHAPS USELESS
-    @Test
-    void save() {
-        // Given
-
-        // When
-
-        // Then
-
-    }
-
-    // OPTIONAL: PERHAPS USELESS
-    @Test
-    void delete() {
-        // Given
-
-        // When
-
-        // Then
-
-    }
-    */
 }

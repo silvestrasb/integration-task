@@ -93,12 +93,10 @@ class BeneficiaryRestControllerTest {
                 .andReturn();
 
         String actualJsonResponse = mvcResult.getResponse().getContentAsString();
-
         String expectedJsonResponse = objectMapper.writeValueAsString(beneficiary);
 
         // Then
         assertEquals(actualJsonResponse, expectedJsonResponse);
-
     }
 
 
@@ -117,12 +115,10 @@ class BeneficiaryRestControllerTest {
                 .andReturn();
 
         String actualJsonResponse = mvcResult.getResponse().getContentAsString();
-
         String expectedJsonResponse = objectMapper.writeValueAsString(beneficiary);
 
         // Then
         assertEquals(actualJsonResponse, expectedJsonResponse);
-
     }
 
 
@@ -137,11 +133,9 @@ class BeneficiaryRestControllerTest {
         MvcResult mvcResult = mockMvc.perform(delete(url)).andExpect(status().isOk()).andReturn();
 
         String actualResponse = mvcResult.getResponse().getContentAsString();
-
         String expectedResponse = "Deleted beneficiary's id - " + beneficiary.getId();
 
         // Then
         assertEquals(actualResponse, expectedResponse);
-
     }
 }
