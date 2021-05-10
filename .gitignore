@@ -21,6 +21,7 @@ target/
 
 ### Maven ###
 mvnw*
+.mvn
 
 ### NetBeans ###
 /nbproject/private/
