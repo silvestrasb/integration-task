@@ -5,9 +5,14 @@ import com.application.integration_task.service.BeneficiaryService;
 import com.application.integration_task.util.QRCodeLink;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,13 +38,12 @@ public class BeneficiaryRestController {
 
     // return qr code based on id
     @GetMapping("/beneficiary/qr/{beneficiaryId}")
-    public RedirectView getUniqueCodeAndNameQRCode(@PathVariable int beneficiaryId) {
+    public ResponseEntity<Void> getUniqueCodeAndNameQRCode(@PathVariable int beneficiaryId) {
 
-        return new RedirectView(
-                new QRCodeLink().generateQRCodeLink(
-                        beneficiaryService.findById(beneficiaryId)
-                )
-        );
+        String link = new QRCodeLink().generateQRCodeLink(
+                beneficiaryService.findById(beneficiaryId));
+
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(link)).build();
     }
 
     // adding a new beneficiary
