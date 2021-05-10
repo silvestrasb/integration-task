@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+
+    <title>Save Beneficiary</title>
+</head>
+<body>
+<div class="container">
+    <h3>Beneficiary Directory</h3>
+    <hr>
+    <p class="h4 mb-4">Save Beneficiary</p>
+    <form action="#" th:action="@{/beneficiaries/save}"
+          th:object="${beneficiary}" method="POST">
+
+        <!-- Hidden form to handle the update -->
+        <input type="hidden" th:field="*{id}">
+
+        <input type="text" th:field="*{uniqueCode}"
+               class="form-control mb-4 col-4" placeholder="Unique Id">
+
+        <input type="text" th:field="*{name}"
+               class="form-control mb-4 col-4" placeholder="Name">
+
+        <button type="submit" class="btn btn-info col-2">Save</button>~
+    </form>
+
+    <hr>
+    <a th:href="@{/beneficiaries/list}">Back to Beneficiary Directory</a>
+</div>
+</body>
+</html>
