@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 // Lombok annotations to minimize boiler-plate code
 @Getter
@@ -26,6 +27,11 @@ public class Beneficiary {
 
     @Column(name = "name")
     private String name;
+
+    public Beneficiary(String name){
+        this.name = name;
+        this.uniqueCode = UUID.randomUUID().toString();
+    }
 
     public Beneficiary(String uniqueCode, String name) {
         this.uniqueCode = uniqueCode;
