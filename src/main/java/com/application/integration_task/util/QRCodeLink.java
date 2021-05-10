@@ -3,6 +3,9 @@ package com.application.integration_task.util;
 import com.application.integration_task.entity.Beneficiary;
 import lombok.Setter;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 @Setter
 public class QRCodeLink {
 
@@ -12,9 +15,9 @@ public class QRCodeLink {
 
     public String generateQRCodeLink(Beneficiary beneficiary){
         return String.format(QRCodeProvider,
-                beneficiary.getUniqueCode(),
+                URLEncoder.encode(beneficiary.getUniqueCode(), StandardCharsets.UTF_8),
                 deliminator,
-                beneficiary.getName());
+                URLEncoder.encode(beneficiary.getName(), StandardCharsets.UTF_8));
     }
 
 
