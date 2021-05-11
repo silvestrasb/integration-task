@@ -92,4 +92,43 @@ public class BeneficiaryControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("beneficiary", beneficiary));
     }
+
+    @Test
+    void listByName() throws Exception {
+        // Given
+        String name = "Tomas";
+        List<Beneficiary> beneficiaryList = List.of(
+                new Beneficiary(name),
+                new Beneficiary(name),
+                new Beneficiary(name)
+        );
+
+        String url = "/beneficiaries/listByName";
+
+        // When
+        Mockito.when(beneficiaryService.findAllByName(name)).thenReturn(beneficiaryList);
+
+        // Then
+        mockMvc.perform(get(url).param("beneficiaryName", name))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("beneficiaries", beneficiaryList));
+
+    }
+
+    @Test
+    void findByUniqueCode() throws Exception {
+        // Given
+        Beneficiary beneficiary = new Beneficiary("UNIQUE_CODE","Tomas");
+
+        String url = "/beneficiaries/findByUniqueCode";
+
+        // When
+        Mockito.when(beneficiaryService.findByUniqueCode(beneficiary.getUniqueCode())).thenReturn(beneficiary);
+
+        // Then
+        mockMvc.perform(get(url).param("beneficiaryUniqueCode", beneficiary.getUniqueCode()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("beneficiaries", beneficiary));
+
+    }
 }
