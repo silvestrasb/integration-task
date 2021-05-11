@@ -38,4 +38,9 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
         beneficiaryRepository.save(beneficiary);
     }
 
+    @Override
+    public List<Beneficiary> findAllByName(String name) {
+        return beneficiaryRepository.findBeneficiaryByNameOrderByNameAsc(name);
+    }
+
 }

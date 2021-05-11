@@ -13,4 +13,6 @@ public interface BeneficiaryService {
 
     void save(Beneficiary beneficiary);
 
+    List<Beneficiary> findAllByName(String name);
+
 }

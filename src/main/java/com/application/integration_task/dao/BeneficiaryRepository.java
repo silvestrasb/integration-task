@@ -9,4 +9,7 @@ import java.util.List;
 public interface BeneficiaryRepository extends JpaRepository<Beneficiary, Integer> {
 
     List<Beneficiary> findAllByOrderByNameAsc();
+
+    List<Beneficiary> findBeneficiaryByNameOrderByNameAsc(String name);
+
 }

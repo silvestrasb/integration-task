@@ -32,13 +32,19 @@ public class BeneficiaryController {
         return "beneficiaries/beneficiary-form";
     }
 
+    @GetMapping("/listByName")
+    public String listByName(@RequestParam("beneficiaryName") String name, Model model) {
+        model.addAttribute("beneficiaries", beneficiaryService.findAllByName(name));
+        return "beneficiaries/list-beneficiaries";
+    }
+
     @GetMapping("/showQRCode")
-    public String showQRCode(@RequestParam("beneficiaryId") int id, Model model){
+    public String showQRCode(@RequestParam("beneficiaryId") int id, Model model) {
         model.addAttribute("qrCodeLink",
                 new QRCodeLink()
                         .generateQRCodeLink(
                                 beneficiaryService.findById(id)
-                ));
+                        ));
 
         return "beneficiaries/beneficiary-qr-code";
 

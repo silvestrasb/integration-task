@@ -23,6 +23,12 @@
     </a>
 
 
+    <form th:action="@{/beneficiaries/listByName}">
+        <input type="text" th:name="beneficiaryName"/>
+        <input type="submit"/>
+    </form>
+
+
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
         <tr>
