@@ -39,8 +39,14 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
     }
 
     @Override
+    @Transactional
     public List<Beneficiary> findAllByName(String name) {
-        return beneficiaryRepository.findBeneficiaryByNameOrderByNameAsc(name);
+        return beneficiaryRepository.findBeneficiariesByNameOrderByNameAsc(name);
     }
 
+    @Override
+    @Transactional
+    public Beneficiary findByUniqueCode(String uniqueCode) {
+        return beneficiaryRepository.findBeneficiaryByUniqueCode(uniqueCode);
+    }
 }

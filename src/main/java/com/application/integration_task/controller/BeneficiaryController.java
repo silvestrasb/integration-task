@@ -38,6 +38,12 @@ public class BeneficiaryController {
         return "beneficiaries/list-beneficiaries";
     }
 
+    @GetMapping("/findByUniqueCode")
+    public String findByUniqueCode(@RequestParam("beneficiaryUniqueCode") String uniqueCode, Model model) {
+        model.addAttribute("beneficiaries", beneficiaryService.findByUniqueCode(uniqueCode));
+        return "beneficiaries/list-beneficiaries";
+    }
+
     @GetMapping("/showQRCode")
     public String showQRCode(@RequestParam("beneficiaryId") int id, Model model) {
         model.addAttribute("qrCodeLink",

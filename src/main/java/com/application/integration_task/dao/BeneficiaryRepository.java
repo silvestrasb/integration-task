@@ -10,6 +10,7 @@ public interface BeneficiaryRepository extends JpaRepository<Beneficiary, Intege
 
     List<Beneficiary> findAllByOrderByNameAsc();
 
-    List<Beneficiary> findBeneficiaryByNameOrderByNameAsc(String name);
+    List<Beneficiary> findBeneficiariesByNameOrderByNameAsc(String name);
 
+    Beneficiary findBeneficiaryByUniqueCode(String name);
 }

@@ -15,4 +15,6 @@ public interface BeneficiaryService {
 
     List<Beneficiary> findAllByName(String name);
 
+    Beneficiary findByUniqueCode(String uniqueCode);
+
 }

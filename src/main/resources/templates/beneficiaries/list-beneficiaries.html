@@ -28,6 +28,11 @@
         <input type="submit"/>
     </form>
 
+    <form th:action="@{/beneficiaries/findByUniqueCode}">
+        <input type="text" th:name="beneficiaryUniqueCode"/>
+        <input type="submit"/>
+    </form>
+
 
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
