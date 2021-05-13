@@ -4,6 +4,7 @@ import com.application.integration_task.entity.Beneficiary;
 import com.application.integration_task.service.BeneficiaryService;
 import com.application.integration_task.util.QRCodeLink;
 import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +14,14 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+// Lombok Annotation
+@AllArgsConstructor
+
 // REST Controller for CRUD operations on Beneficiaries in the DB
 @RestController
 @RequestMapping("/api")
 public class BeneficiaryRestController {
 
-    @Autowired
     private BeneficiaryService beneficiaryService;
 
     // getting all available beneficiaries
