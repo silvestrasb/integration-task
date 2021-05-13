@@ -14,15 +14,16 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
-// Lombok Annotation
-@AllArgsConstructor
-
 // REST Controller for CRUD operations on Beneficiaries in the DB
 @RestController
 @RequestMapping("/api")
 public class BeneficiaryRestController {
 
     private BeneficiaryService beneficiaryService;
+
+    public BeneficiaryRestController(BeneficiaryService beneficiaryService) {
+        this.beneficiaryService = beneficiaryService;
+    }
 
     // getting all available beneficiaries
     @GetMapping("/beneficiary")

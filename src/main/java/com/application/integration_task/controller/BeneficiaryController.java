@@ -3,7 +3,6 @@ package com.application.integration_task.controller;
 import com.application.integration_task.entity.Beneficiary;
 import com.application.integration_task.service.BeneficiaryService;
 import com.application.integration_task.util.QRCodeLink;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,14 +10,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-// Lombok Annotation
-@AllArgsConstructor
-
 @Controller
 @RequestMapping("/beneficiaries")
 public class BeneficiaryController {
 
     private BeneficiaryService beneficiaryService;
+
+    public BeneficiaryController(BeneficiaryService beneficiaryService) {
+        this.beneficiaryService = beneficiaryService;
+    }
 
     @GetMapping("/list")
     public String list(Model model) {
