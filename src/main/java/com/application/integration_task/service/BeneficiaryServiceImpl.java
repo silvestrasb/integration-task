@@ -2,7 +2,6 @@ package com.application.integration_task.service;
 
 import com.application.integration_task.dao.BeneficiaryRepository;
 import com.application.integration_task.entity.Beneficiary;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -11,8 +10,11 @@ import java.util.List;
 @Service
 public class BeneficiaryServiceImpl implements BeneficiaryService {
 
-    @Autowired
-    private BeneficiaryRepository beneficiaryRepository;
+    private final BeneficiaryRepository beneficiaryRepository;
+
+    public BeneficiaryServiceImpl(BeneficiaryRepository beneficiaryRepository) {
+        this.beneficiaryRepository = beneficiaryRepository;
+    }
 
     @Override
     @Transactional

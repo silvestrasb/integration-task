@@ -3,7 +3,6 @@ package com.application.integration_task.dao;
 import com.application.integration_task.entity.Beneficiary;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -14,8 +13,11 @@ import java.util.List;
 public class BeneficiaryDAOHibernateImpl implements BeneficiaryDAO {
 
     // define field for entity manager
-    @Autowired
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
+
+    public BeneficiaryDAOHibernateImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Override
     public List<Beneficiary> findAll() {
@@ -27,11 +29,8 @@ public class BeneficiaryDAOHibernateImpl implements BeneficiaryDAO {
         Query<Beneficiary> theQuery =
                 currentSession.createQuery("FROM Beneficiary ", Beneficiary.class);
 
-        // execute the query and get the result list
-        List<Beneficiary> beneficiaries = theQuery.getResultList();
-
         // return the results
-        return beneficiaries;
+        return theQuery.getResultList();
     }
 
     @Override
@@ -39,12 +38,8 @@ public class BeneficiaryDAOHibernateImpl implements BeneficiaryDAO {
         // get the current hibernate session
         Session currentSession = entityManager.unwrap(Session.class);
 
-        // get the beneficiary
-        Beneficiary beneficiary =
-                currentSession.get(Beneficiary.class, id);
-
         // return the beneficiary
-        return beneficiary;
+        return currentSession.get(Beneficiary.class, id);
     }
 
     @Override

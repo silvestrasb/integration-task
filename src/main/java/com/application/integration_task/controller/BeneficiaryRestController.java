@@ -2,10 +2,8 @@ package com.application.integration_task.controller;
 
 import com.application.integration_task.entity.Beneficiary;
 import com.application.integration_task.service.BeneficiaryService;
-import com.application.integration_task.util.QRCodeLink;
+import com.application.integration_task.util.QRProviderFactory;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +17,7 @@ import java.util.UUID;
 @RequestMapping("/api")
 public class BeneficiaryRestController {
 
-    private BeneficiaryService beneficiaryService;
+    private final BeneficiaryService beneficiaryService;
 
     public BeneficiaryRestController(BeneficiaryService beneficiaryService) {
         this.beneficiaryService = beneficiaryService;
@@ -41,8 +39,11 @@ public class BeneficiaryRestController {
     @GetMapping("/beneficiary/qr/{beneficiaryId}")
     public ResponseEntity<Void> getUniqueCodeAndNameQRCode(@PathVariable int beneficiaryId) {
 
-        String link = new QRCodeLink().generateQRCodeLink(
-                beneficiaryService.findById(beneficiaryId));
+        String link = new QRProviderFactory()
+                .getProvider("qrcode.tec-it.com")
+                .getLink(
+                        beneficiaryService.findById(beneficiaryId)
+                );
 
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(link)).build();
     }
@@ -69,9 +70,9 @@ public class BeneficiaryRestController {
     public Beneficiary updateBeneficiary(@RequestBody Beneficiary beneficiary) {
         if (beneficiary.getUniqueCode() == null) {
             beneficiary.setUniqueCode(beneficiaryService
-                            .findById(beneficiary
+                    .findById(beneficiary
                             .getId())
-                            .getUniqueCode());
+                    .getUniqueCode());
         }
         beneficiaryService.save(beneficiary);
 

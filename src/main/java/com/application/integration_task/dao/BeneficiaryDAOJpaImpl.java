@@ -1,7 +1,6 @@
 package com.application.integration_task.dao;
 
 import com.application.integration_task.entity.Beneficiary;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -13,8 +12,11 @@ import java.util.List;
 @Repository
 public class BeneficiaryDAOJpaImpl implements BeneficiaryDAO {
 
-    @Autowired
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
+
+    public BeneficiaryDAOJpaImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Override
     public List<Beneficiary> findAll() {
@@ -22,21 +24,15 @@ public class BeneficiaryDAOJpaImpl implements BeneficiaryDAO {
         TypedQuery<Beneficiary> query =
                 entityManager.createQuery("FROM Beneficiary ", Beneficiary.class);
 
-        // execute the query and get the result list
-        List<Beneficiary> beneficiaries = query.getResultList();
-
         // return the results
-        return beneficiaries;
+        return query.getResultList();
     }
 
     @Override
     public Beneficiary findById(int theId) {
 
-        // get beneficiary
-        Beneficiary beneficiary = entityManager.find(Beneficiary.class, theId);
+        return entityManager.find(Beneficiary.class, theId);
 
-        // return the result
-        return beneficiary;
     }
 
     @Override

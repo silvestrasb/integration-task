@@ -6,7 +6,7 @@ public class QRProviderFactory {
 
     public QRCodeProvider<Beneficiary> getProvider(String provider) {
         switch (provider) {
-            case "TecIt":
+            case "qrcode.tec-it.com":
                 return new QRCodeTecItProvider();
             default:
                 return null;

@@ -2,7 +2,7 @@ package com.application.integration_task.controller;
 
 import com.application.integration_task.entity.Beneficiary;
 import com.application.integration_task.service.BeneficiaryService;
-import com.application.integration_task.util.QRCodeLink;
+import com.application.integration_task.util.QRProviderFactory;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +66,9 @@ public class BeneficiaryControllerTest {
         Beneficiary beneficiary = new Beneficiary("TEST_UNIQUE_CODE", "TEST_NAME");
 
         String url = "/beneficiaries/showQRCode";
-        String qrCodeLink = new QRCodeLink().generateQRCodeLink(beneficiary);
+        String qrCodeLink = new QRProviderFactory()
+                .getProvider("qrcode.tec-it.com")
+                .getLink(beneficiary);
 
         // When
         Mockito.when(beneficiaryService.findById(0)).thenReturn(beneficiary);
@@ -118,7 +120,7 @@ public class BeneficiaryControllerTest {
     @Test
     void findByUniqueCode() throws Exception {
         // Given
-        Beneficiary beneficiary = new Beneficiary("UNIQUE_CODE","Tomas");
+        Beneficiary beneficiary = new Beneficiary("UNIQUE_CODE", "Tomas");
 
         String url = "/beneficiaries/findByUniqueCode";
 

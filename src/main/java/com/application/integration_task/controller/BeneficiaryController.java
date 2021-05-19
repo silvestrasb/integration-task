@@ -2,8 +2,7 @@ package com.application.integration_task.controller;
 
 import com.application.integration_task.entity.Beneficiary;
 import com.application.integration_task.service.BeneficiaryService;
-import com.application.integration_task.util.QRCodeLink;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.application.integration_task.util.QRProviderFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,7 @@ import java.util.UUID;
 @RequestMapping("/beneficiaries")
 public class BeneficiaryController {
 
-    private BeneficiaryService beneficiaryService;
+    private final BeneficiaryService beneficiaryService;
 
     public BeneficiaryController(BeneficiaryService beneficiaryService) {
         this.beneficiaryService = beneficiaryService;
@@ -50,10 +49,12 @@ public class BeneficiaryController {
     @GetMapping("/showQRCode")
     public String showQRCode(@RequestParam("beneficiaryId") int id, Model model) {
         model.addAttribute("qrCodeLink",
-                new QRCodeLink()
-                        .generateQRCodeLink(
+                new QRProviderFactory()
+                        .getProvider("qrcode.tec-it.com")
+                        .getLink(
                                 beneficiaryService.findById(id)
-                        ));
+                        )
+        );
 
         return "beneficiaries/beneficiary-qr-code";
 

@@ -7,12 +7,12 @@ import java.util.List;
 // Alternative DAO interface
 public interface BeneficiaryDAO {
 
-    public List<Beneficiary> findAll();
+    List<Beneficiary> findAll();
 
-    public Beneficiary findById(int id);
+    Beneficiary findById(int id);
 
-    public void save(Beneficiary beneficiary);
+    void save(Beneficiary beneficiary);
 
-    public void deleteById(int id);
+    void deleteById(int id);
 
 }
