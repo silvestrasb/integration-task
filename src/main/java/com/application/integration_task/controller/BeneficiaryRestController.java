@@ -4,6 +4,7 @@ import com.application.integration_task.entity.Beneficiary;
 import com.application.integration_task.service.BeneficiaryService;
 import com.application.integration_task.util.QRProviderFactory;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,27 +18,45 @@ import java.util.UUID;
 @RequestMapping("/api")
 public class BeneficiaryRestController {
 
+
     private final BeneficiaryService beneficiaryService;
 
     public BeneficiaryRestController(BeneficiaryService beneficiaryService) {
+
         this.beneficiaryService = beneficiaryService;
     }
 
-    // getting all available beneficiaries
     @GetMapping("/beneficiary")
+    @ApiOperation(value = "Get all available Beneficiaries from the database.")
     public List<Beneficiary> getBeneficiaries() {
         return beneficiaryService.findAll();
     }
 
-    // beneficiary  by id
+
     @GetMapping("/beneficiary/{beneficiaryId}")
-    public Beneficiary getBeneficiary(@PathVariable int beneficiaryId) {
+    @ApiOperation(value = "Get Beneficiary by id.")
+    public Beneficiary getBeneficiary(
+            @ApiParam(
+                    name = "beneficiaryId",
+                    value = "ID of the beneficiary",
+                    example = "1",
+                    required = true
+            )
+            @PathVariable int beneficiaryId) {
         return beneficiaryService.findById(beneficiaryId);
     }
 
-    // return qr code based on id
+
     @GetMapping("/beneficiary/qr/{beneficiaryId}")
-    public ResponseEntity<Void> getUniqueCodeAndNameQRCode(@PathVariable int beneficiaryId) {
+    @ApiOperation(value = "Provide an id to get QR image containing uniqueCode and name of the Beneficiary.")
+    public ResponseEntity<Void> getUniqueCodeAndNameQRCode(
+            @ApiParam(
+                    name = "beneficiaryId",
+                    value = "ID of the beneficiary",
+                    example = "1",
+                    required = true
+            )
+            @PathVariable int beneficiaryId) {
 
         String link = new QRProviderFactory()
                 .getProvider("qrcode.tec-it.com")
@@ -48,11 +67,18 @@ public class BeneficiaryRestController {
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(link)).build();
     }
 
-    // adding a new beneficiary
+
     @PostMapping("/beneficiary")
-    @ApiOperation(value = "add Beneficiary",
-            notes = "Let uniqueCode equal null if you want it to be auto generated")
-    public Beneficiary addBeneficiary(@RequestBody Beneficiary beneficiary) {
+    @ApiOperation(
+            value = "Add new Beneficiary",
+            notes = "Let uniqueCode equal null if you want it to be auto generated"
+    )
+    public Beneficiary addBeneficiary(
+            @ApiParam(
+                    name = "beneficiary",
+                    value = "Beneficiary object in json"
+            )
+            @RequestBody Beneficiary beneficiary) {
         if (beneficiary.getUniqueCode() == null) {
             beneficiary.setUniqueCode(UUID.randomUUID().toString());
         }
@@ -62,12 +88,18 @@ public class BeneficiaryRestController {
         return beneficiary;
     }
 
-    // updating an existing beneficiary
-    // class BeneficiaryRepository throws required exceptions
+
     @PutMapping("/beneficiary")
-    @ApiOperation(value = "update Beneficiary",
-            notes = "Let uniqueCode equal null if you want to keep the original unique code.")
-    public Beneficiary updateBeneficiary(@RequestBody Beneficiary beneficiary) {
+    @ApiOperation(
+            value = "Update Beneficiary",
+            notes = "Let uniqueCode equal null if you want to keep the original unique code."
+    )
+    public Beneficiary updateBeneficiary(
+            @ApiParam(
+                    name = "beneficiary",
+                    value = "Beneficiary object in json"
+            )
+            @RequestBody Beneficiary beneficiary) {
         if (beneficiary.getUniqueCode() == null) {
             beneficiary.setUniqueCode(beneficiaryService
                     .findById(beneficiary
@@ -79,10 +111,17 @@ public class BeneficiaryRestController {
         return beneficiary;
     }
 
-    // deleting existing beneficiary
-    // class BeneficiaryRepository throws required exceptions
+
     @DeleteMapping("/beneficiary/{beneficiaryId}")
-    public String deleteBeneficiary(@PathVariable int beneficiaryId) {
+    @ApiOperation(value = "Delete Beneficiary by id.")
+    public String deleteBeneficiary(
+            @ApiParam(
+                    name = "beneficiaryId",
+                    value = "ID of the beneficiary",
+                    example = "1",
+                    required = true
+            )
+            @PathVariable int beneficiaryId) {
         beneficiaryService.deleteById(beneficiaryId);
         return "Deleted beneficiary's id - " + beneficiaryId;
     }
