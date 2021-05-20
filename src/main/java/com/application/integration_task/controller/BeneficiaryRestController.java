@@ -1,10 +1,15 @@
 package com.application.integration_task.controller;
 
 import com.application.integration_task.entity.Beneficiary;
+import com.application.integration_task.exception.BeneficiaryNotFoundException;
+import com.application.integration_task.exception.BeneficiaryUniqueCodeDuplicateException;
 import com.application.integration_task.service.BeneficiaryService;
 import com.application.integration_task.util.QRProviderFactory;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +23,7 @@ import java.util.UUID;
 @RequestMapping("/api")
 public class BeneficiaryRestController {
 
+    private final Logger log = LoggerFactory.getLogger(BeneficiaryRestController.class);
 
     private final BeneficiaryService beneficiaryService;
 
@@ -29,6 +35,7 @@ public class BeneficiaryRestController {
     @GetMapping("/beneficiary")
     @ApiOperation(value = "Get all available Beneficiaries from the database.")
     public List<Beneficiary> getBeneficiaries() {
+        log.info("/api/beneficiary -> getBeneficiaries: Retrieving all beneficiaries.");
         return beneficiaryService.findAll();
     }
 
@@ -43,6 +50,13 @@ public class BeneficiaryRestController {
                     required = true
             )
             @PathVariable int beneficiaryId) {
+
+        log.info("/api/beneficiary/{beneficiaryId} -> getBeneficiary: Retrieving beneficiary with id :" + beneficiaryId);
+
+        nonExistingIdCatcher(beneficiaryId);
+
+        log.info("/api/beneficiary/{beneficiaryId} -> getBeneficiary: Retrieved beneficiary with id :" + beneficiaryId);
+
         return beneficiaryService.findById(beneficiaryId);
     }
 
@@ -58,12 +72,17 @@ public class BeneficiaryRestController {
             )
             @PathVariable int beneficiaryId) {
 
+        log.info("/api/beneficiary/qr/{beneficiaryId} -> getUniqueCodeAndNameQRCode: Returning QR Image for beneficiary with id: " + beneficiaryId);
+
+        nonExistingIdCatcher(beneficiaryId);
+
         String link = new QRProviderFactory()
                 .getProvider("qrcode.tec-it.com")
                 .getLink(
                         beneficiaryService.findById(beneficiaryId)
                 );
 
+        log.info("/api/beneficiary/qr/{beneficiaryId} -> getUniqueCodeAndNameQRCode: Returned QR Image for beneficiary with id: " + beneficiaryId);
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(link)).build();
     }
 
@@ -79,11 +98,18 @@ public class BeneficiaryRestController {
                     value = "Beneficiary object in json"
             )
             @RequestBody Beneficiary beneficiary) {
+
+        log.info("/api/beneficiary -> addBeneficiary: Saving beneficiary with id: " + beneficiary.getId());
+
         if (beneficiary.getUniqueCode() == null) {
             beneficiary.setUniqueCode(UUID.randomUUID().toString());
         }
+
         beneficiary.setId(0);
-        beneficiaryService.save(beneficiary);
+
+        duplicateKeyCatcher(beneficiary);
+
+        log.info("/api/beneficiary -> addBeneficiary: Saved beneficiary with id: " + beneficiary.getId());
 
         return beneficiary;
     }
@@ -100,13 +126,21 @@ public class BeneficiaryRestController {
                     value = "Beneficiary object in json"
             )
             @RequestBody Beneficiary beneficiary) {
+
+        log.info("/api/beneficiary -> updateBeneficiary: Updating beneficiary with id: " + beneficiary.getId());
+
+        nonExistingIdCatcher(beneficiary.getId());
+
         if (beneficiary.getUniqueCode() == null) {
             beneficiary.setUniqueCode(beneficiaryService
                     .findById(beneficiary
                             .getId())
                     .getUniqueCode());
         }
-        beneficiaryService.save(beneficiary);
+
+        duplicateKeyCatcher(beneficiary);
+
+        log.info("/api/beneficiary -> updateBeneficiary: Updated beneficiary with id: " + beneficiary.getId());
 
         return beneficiary;
     }
@@ -122,7 +156,35 @@ public class BeneficiaryRestController {
                     required = true
             )
             @PathVariable int beneficiaryId) {
+
+        log.info("/api/beneficiary/{beneficiaryId} -> deleteBeneficiary: Deleting beneficiary with id: " + beneficiaryId);
+
+        nonExistingIdCatcher(beneficiaryId);
         beneficiaryService.deleteById(beneficiaryId);
-        return "Deleted beneficiary's id - " + beneficiaryId;
+
+        log.info("/api/beneficiary/{beneficiaryId} -> deleteBeneficiary: Deleted beneficiary with id: " + beneficiaryId);
+
+        return "Deleted beneficiary's id -> " + beneficiaryId;
+    }
+
+
+    // HELPER METHODS
+
+    private void duplicateKeyCatcher(Beneficiary beneficiary){
+        try {
+            beneficiaryService.save(beneficiary);
+        } catch (DataIntegrityViolationException e) {
+            log.error("duplicate key, beneficiary's with the same unique code id: " +
+                    beneficiary.getId());
+            throw new BeneficiaryUniqueCodeDuplicateException("Unique code already exists, id: " +
+                    beneficiary.getId());
+        }
+    }
+
+    private void nonExistingIdCatcher(int id){
+        if (beneficiaryService.findById(id) == null){
+            log.error("Beneficiary not found with id: " + id);
+            throw new BeneficiaryNotFoundException("Beneficiary not found with id: " + id);
+        }
     }
 }
