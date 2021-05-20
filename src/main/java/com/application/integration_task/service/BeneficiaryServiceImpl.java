@@ -22,7 +22,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
 
     @Override
     public Beneficiary findById(int id) {
-        return beneficiaryRepository.findById(id).get();
+        return beneficiaryRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -43,5 +43,6 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
     @Override
     public Beneficiary findByUniqueCode(String uniqueCode) {
         return beneficiaryRepository.findBeneficiaryByUniqueCode(uniqueCode);
+
     }
 }
