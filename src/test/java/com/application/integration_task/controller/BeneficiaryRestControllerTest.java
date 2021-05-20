@@ -1,6 +1,7 @@
 package com.application.integration_task.controller;
 
 import com.application.integration_task.entity.Beneficiary;
+import com.application.integration_task.exception.BeneficiaryNotFoundException;
 import com.application.integration_task.service.BeneficiaryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -97,45 +99,5 @@ class BeneficiaryRestControllerTest {
 
         // Then
         assertEquals(actualJsonResponse, expectedJsonResponse);
-    }
-
-
-    @Test
-    void updateBeneficiary() throws Exception {
-        // Given
-        Beneficiary beneficiary = new Beneficiary("TEST_UNIQUE_CODE", "TEST_NAME");
-        String url = "/api/beneficiary";
-
-        // When
-        MvcResult mvcResult = mockMvc.perform(
-                put(url)
-                        .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(beneficiary)))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String actualJsonResponse = mvcResult.getResponse().getContentAsString();
-        String expectedJsonResponse = objectMapper.writeValueAsString(beneficiary);
-
-        // Then
-        assertEquals(actualJsonResponse, expectedJsonResponse);
-    }
-
-
-    @Test
-    void deleteBeneficiary() throws Exception {
-        // Given
-        Beneficiary beneficiary = new Beneficiary("TEST_UNIQUE_CODE", "TEST_NAME");
-        beneficiary.setId(53);
-        String url = "/api/beneficiary/" + beneficiary.getId();
-
-        // When
-        MvcResult mvcResult = mockMvc.perform(delete(url)).andExpect(status().isOk()).andReturn();
-
-        String actualResponse = mvcResult.getResponse().getContentAsString();
-        String expectedResponse = "Deleted beneficiary's id - " + beneficiary.getId();
-
-        // Then
-        assertEquals(actualResponse, expectedResponse);
     }
 }
