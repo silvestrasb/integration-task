@@ -2,6 +2,8 @@ package com.application.integration_task.controller;
 
 import com.application.integration_task.entity.Beneficiary;
 import com.application.integration_task.service.BeneficiaryService;
+import com.application.integration_task.util.QRCodeProvider;
+import com.application.integration_task.util.QRCodeTecItProvider;
 import com.application.integration_task.util.QRProviderFactory;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,6 +26,12 @@ public class BeneficiaryControllerTest {
 
     @MockBean
     private BeneficiaryService beneficiaryService;
+
+    @MockBean
+    private QRProviderFactory qrProviderFactory;
+
+    @MockBean
+    private QRCodeTecItProvider qrCodeTecItProvider;
 
 
     @Test
@@ -66,9 +74,14 @@ public class BeneficiaryControllerTest {
         Beneficiary beneficiary = new Beneficiary("TEST_UNIQUE_CODE", "TEST_NAME");
 
         String url = "/beneficiaries/showQRCode";
-        String qrCodeLink = new QRProviderFactory()
+
+        Mockito.when(qrProviderFactory.getProvider("qrcode.tec-it.com")).thenReturn(qrCodeTecItProvider);
+        Mockito.when(qrCodeTecItProvider.getLink(beneficiary)).thenReturn("www.test-link.com");
+
+        String qrCodeLink = qrProviderFactory
                 .getProvider("qrcode.tec-it.com")
                 .getLink(beneficiary);
+
 
         // When
         Mockito.when(beneficiaryService.findById(0)).thenReturn(beneficiary);

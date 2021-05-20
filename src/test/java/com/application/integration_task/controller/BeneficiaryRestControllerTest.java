@@ -1,11 +1,14 @@
 package com.application.integration_task.controller;
 
 import com.application.integration_task.entity.Beneficiary;
-import com.application.integration_task.exception.BeneficiaryNotFoundException;
 import com.application.integration_task.service.BeneficiaryService;
+import com.application.integration_task.util.QRProviderFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,8 +18,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BeneficiaryRestController.class)
@@ -31,6 +34,8 @@ class BeneficiaryRestControllerTest {
     @MockBean
     private BeneficiaryService beneficiaryService;
 
+    @MockBean
+    private QRProviderFactory qrProviderFactory;
 
     @Test
     void getBeneficiaries_text_text() throws Exception {
