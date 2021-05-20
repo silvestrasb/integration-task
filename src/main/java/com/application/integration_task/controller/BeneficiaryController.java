@@ -16,10 +16,12 @@ import java.util.UUID;
 public class BeneficiaryController {
 
     private final Logger log = LoggerFactory.getLogger(BeneficiaryController.class);
-
+    private final QRProviderFactory qrProviderFactory;
     private final BeneficiaryService beneficiaryService;
 
-    public BeneficiaryController(BeneficiaryService beneficiaryService) {
+    public BeneficiaryController(QRProviderFactory qrProviderFactory,
+                                 BeneficiaryService beneficiaryService) {
+        this.qrProviderFactory = qrProviderFactory;
         this.beneficiaryService = beneficiaryService;
     }
 
@@ -58,7 +60,7 @@ public class BeneficiaryController {
     @GetMapping("/showQRCode")
     public String showQRCode(@RequestParam("beneficiaryId") int id, Model model) {
         model.addAttribute("qrCodeLink",
-                new QRProviderFactory()
+                qrProviderFactory
                         .getProvider("qrcode.tec-it.com")
                         .getLink(
                                 beneficiaryService.findById(id)

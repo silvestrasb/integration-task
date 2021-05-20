@@ -24,11 +24,12 @@ import java.util.UUID;
 public class BeneficiaryRestController {
 
     private final Logger log = LoggerFactory.getLogger(BeneficiaryRestController.class);
-
+    private final QRProviderFactory qrProviderFactory;
     private final BeneficiaryService beneficiaryService;
 
-    public BeneficiaryRestController(BeneficiaryService beneficiaryService) {
-
+    public BeneficiaryRestController(QRProviderFactory qrProviderFactory,
+                                     BeneficiaryService beneficiaryService) {
+        this.qrProviderFactory = qrProviderFactory;
         this.beneficiaryService = beneficiaryService;
     }
 
@@ -76,7 +77,7 @@ public class BeneficiaryRestController {
 
         nonExistingIdCatcher(beneficiaryId);
 
-        String link = new QRProviderFactory()
+        String link = qrProviderFactory
                 .getProvider("qrcode.tec-it.com")
                 .getLink(
                         beneficiaryService.findById(beneficiaryId)
